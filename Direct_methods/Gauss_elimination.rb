@@ -1,39 +1,7 @@
-require 'matrix'
 require_relative 'backward_sub.rb'
+require_relative 'utils.rb'
 
-def matrix_to_float(matrix)
-    for i in 0..matrix.row_count()-1
-        for j in 0..matrix.column_count()-1
-            matrix[i,j] = matrix[i,j].to_f
-        end
-    end
-    return matrix
-end
-
-def pivot_search(matrix, iter)
-    pivot_candidates = Array.new(matrix.row_count()) {|i| i >= iter ? matrix.row(i)[0] : -1000.0}
-    return pivot_candidates.index(pivot_candidates.max())
-end
-
-def swap!(matrix,a,b)
-    for i in 0..matrix.row_count()-1
-        matrix[a, i], matrix[b, i] = matrix[b, i], matrix[a, i]
-    end
-    return matrix
-end
-
-def fix_error_matrix(matrix)
-    for i in 0..matrix.row_count()-1
-        for j in 0..matrix.column_count()-1
-            if matrix[i,j].abs < 1.0e-10
-                matrix[i,j] = 0.0
-            end
-        end
-    end
-    return matrix
-end
-
-def gauss_elimination(dim, matrix, vector)
+def gauss_elimination(dim, matrix, vector, solve)
     n = dim
 
     mat = matrix_to_float(matrix)
@@ -53,9 +21,13 @@ def gauss_elimination(dim, matrix, vector)
         end
         puts mat
         mat = fix_error_matrix(mat)
-        backward_substitution(n, mat, b)
+        if solve
+            backward_substitution(n, mat, b)
+        else
+            mat
+        end
     end
     
 end
 
-gauss_elimination(3, Matrix.build(4) {rand(1..9)}, Matrix.column_vector([4.0,5.0,6.0,4.0]))
+gauss_elimination(3, Matrix.build(4) {rand(1..9)}, Matrix.column_vector([4.0,5.0,6.0,4.0]), true)
