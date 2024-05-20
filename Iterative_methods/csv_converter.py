@@ -6,4 +6,4 @@ import pandas
 
 
 
-mat = scipy.io.mmread("spa1.mtx")
+mat = scipy.io.mmread("../spa1.mtx")
