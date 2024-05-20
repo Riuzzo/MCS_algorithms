@@ -1,5 +1,5 @@
 require_relative 'backward_sub.rb'
-require_relative 'utils.rb'
+require_relative '../utils.rb'
 
 def gauss_elimination(dim, matrix, vector, solve)
     n = dim

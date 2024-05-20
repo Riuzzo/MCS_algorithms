@@ -1,4 +1,4 @@
-require_relative 'utils.rb'
+require_relative '../utils.rb'
 
 
 def PALU(dim, matrix)
