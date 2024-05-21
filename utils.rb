@@ -31,3 +31,16 @@ def fix_error_matrix(matrix)
     end
     return matrix
 end
+
+def load_matrix(filename)
+    file = File.open(filename)
+    file_data = file.read().split()
+    matrix = Matrix.zero(file_data[0].to_i)
+    i = 5
+    h,k = 0
+    while i < file_data.length
+        matrix[file_data[i-2].to_i - 1, file_data[i-1].to_i - 1] = file_data[i].to_f
+        i += 3
+    end
+    return matrix
+end

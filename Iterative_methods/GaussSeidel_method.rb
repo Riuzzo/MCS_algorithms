@@ -1,9 +1,11 @@
 require_relative '../utils.rb'
+require_relative '../Direct_methods/forward_sub.rb'
 
 def preprocessing(filename)
     a = load_matrix(filename)
 
-    p = Matrix.zero(a.row_count())
+    p = Matrix.build(a.row_count) {|row, col| col > row ? 0.0 : a[row, col]}
+    n = Matrix.build(a.row_count) {|row, col| col <= row ? 0.0 : -a[row, col]}
 
     x = matrix_to_float(p.minor(0..a.row_count()-1, 0..0))
     sol = matrix_to_float(p.minor(0..a.row_count()-1, 0..0))
@@ -12,14 +14,6 @@ def preprocessing(filename)
     end
     b = a*sol
 
-    for i in 0..a.row_count()-1
-        p[i,i] = a[i,i]
-    end
-
-    n = a * -1.0
-    for i in 0..a.row_count()-1
-        n[i,i] = 0.0
-    end
     return a,p,b,x,n
 end
 
@@ -32,15 +26,16 @@ def norm(matrix)
     return norms.max()
 end
 
-def jacobi_method(filename, tol)
+def gauss_seidel_method(filename, tol)
     a,p,b,x,n = preprocessing(filename)
 
-    p_inverse = Matrix.build(p.row_count()) {|i, j| i==j ? 1.0/p[i,i] : 0.0}
+    #p_inverse = Matrix.build(p.row_count()) {|i, j| i==j ? 1.0/p[i,i] : 0.0}
 
     k = 1
     while k < 20000
         r = b - a*x
-        x = x + p_inverse*r
+        y = forward_substitution(p.row_count()-1, p, r)
+        x = x + y
         puts norm(r)/norm(b)
         if (norm(r)/norm(b) < tol)
             break
@@ -53,4 +48,4 @@ def jacobi_method(filename, tol)
 end
 
 tol = [0.0001, 0.000001, 0.00000001, 0.0000000001]
-jacobi_method('vem1.mtx', tol[3])
+gauss_seidel_method('vem1.mtx', tol[0])
