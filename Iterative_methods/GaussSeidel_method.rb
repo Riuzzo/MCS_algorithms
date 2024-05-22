@@ -48,4 +48,4 @@ def gauss_seidel_method(filename, tol)
 end
 
 tol = [0.0001, 0.000001, 0.00000001, 0.0000000001]
-gauss_seidel_method('vem1.mtx', tol[0])
+gauss_seidel_method('vem2.mtx', tol[0])
