@@ -52,5 +52,23 @@ def jacobi_method(filename, tol)
 
 end
 
-tol = [0.0001, 0.000001, 0.00000001, 0.0000000001]
-jacobi_method('vem1.mtx', tol[3])
+#tol = [0.0001, 0.000001, 0.00000001, 0.0000000001]
+#jacobi_method('vem1.mtx', tol[3])
+
+def dominance_diagonal(filename)
+    a = load_matrix(filename)
+    for i in 0..a.row_count()-1
+        sum = 0
+        for j in 0..a.row_count()-1
+            if i != j
+                sum += a[i,j].abs()
+            end
+        end
+        if a[i,i].abs() < sum
+            puts "No es diagonal dominante"
+            return
+        end
+    end
+end
+
+dominance_diagonal('spa1.mtx')
